@@ -7,6 +7,7 @@ function addSchedule() {
   const timeInput = document.getElementById("time").value;
   const dateInput = document.getElementById("date").value;
   const dayCheckboxes = document.querySelectorAll(".day-checkbox");
+  const soundInput = document.getElementById("sound").value;
 
   if (!timeInput) {
     alert("Please select a valid time.");
@@ -32,6 +33,7 @@ function addSchedule() {
     time: timeInput,
     date: dateInput || null,
     days: selectedDays,
+    sound: soundInput,
   };
 
   // Check if the schedule already exists
@@ -53,6 +55,7 @@ function addSchedule() {
   document.getElementById("time").value = "";
   document.getElementById("date").value = "";
   dayCheckboxes.forEach((checkbox) => (checkbox.checked = false));
+  document.getElementById("sound").value = "bell.mp3";
 }
 
 // Function to remove a scheduled time
@@ -84,6 +87,10 @@ function updateScheduleTable() {
     const daysCell = document.createElement("td");
     daysCell.textContent = item.days.length > 0 ? item.days.join(", ") : "N/A";
     row.appendChild(daysCell);
+
+    const soundCell = document.createElement("td");
+    soundCell.textContent = item.sound === "bell.mp3" ? "Bell" : "Fire Alarm";
+    row.appendChild(soundCell);
 
     const actionCell = document.createElement("td");
     const removeButton = document.createElement("button");
@@ -143,11 +150,11 @@ function checkAndRingBell() {
       item.time === currentFormattedTime &&
       (item.date === currentDate || item.days.includes(currentDay))
     ) {
-      console.log(`[${new Date().toLocaleTimeString()}] Ringing bell at: ${currentFormattedTime}`);
-      const bellSound = document.getElementById("bellSound");
-      bellSound.play().catch((error) => {
+      console.log(`[${new Date().toLocaleTimeString()}] Ringing ${item.sound} at: ${currentFormattedTime}`);
+      const sound = document.getElementById(item.sound === "bell.mp3" ? "bellSound" : "fireAlarmSound");
+      sound.play().catch((error) => {
         console.error(`[${new Date().toLocaleTimeString()}] Error playing sound:`, error);
-        alert("Unable to play the bell sound. Check your audio settings or file path.");
+        alert("Unable to play the sound. Check your audio settings or file path.");
       });
     }
   });

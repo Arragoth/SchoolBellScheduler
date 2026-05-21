@@ -59,6 +59,12 @@
     <label><input type="checkbox" class="day-checkbox" value="Friday"> Fri</label>
     <label><input type="checkbox" class="day-checkbox" value="Saturday"> Sat</label>
     <label><input type="checkbox" class="day-checkbox" value="Sunday"> Sun</label>
+    <br>
+    <label for="sound">Select Sound:</label>
+    <select id="sound">
+      <option value="bell.mp3">Bell</option>
+      <option value="fire_alarm.mp3">Fire Alarm</option>
+    </select>
     <button onclick="addSchedule()">Add to Schedule</button>
   </div>
 
@@ -77,6 +83,7 @@
           <th>Time</th>
           <th>Date</th>
           <th>Days</th>
+          <th>Sound</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -87,6 +94,7 @@
   </div>
 
   <audio id="bellSound" src="bell.mp3" preload="auto"></audio>
+  <audio id="fireAlarmSound" src="fire_alarm.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
