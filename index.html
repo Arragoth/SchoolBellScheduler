@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bell Scheduler</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    #schedule {
+      margin-top: 20px;
+    }
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bell Scheduler</h1>
+  <div>
+    <label for="time">Select Time:</label>
+    <input type="time" id="time" required>
+    <button onclick="addSchedule()">Add to Schedule</button>
+  </div>
+
+  <div id="scheduler">
+    <h2>Control Scheduler</h2>
+    <button onclick="startScheduler()">Start Scheduler</button>
+    <button onclick="testBell()">Test Bell</button>
+    <p id="status">Scheduler is not running.</p>
+  </div>
+
+  <div id="schedule">
+    <h2>Scheduled Bells</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="scheduleTable">
+        <!-- Scheduled times will appear here -->
+      </tbody>
+    </table>
+  </div>
+
+  <audio id="bellSound" src="bell.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
