@@ -1,0 +1,25 @@
+{
+  "name": "schoolbellscheduler",
+  "version": "1.0.0",
+  "description": "A simple schedule for automating the school bell",
+  "homepage": "https://github.com/Arragoth/SchoolBellScheduler#readme",
+  "bugs": {
+    "url": "https://github.com/Arragoth/SchoolBellScheduler/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arragoth/SchoolBellScheduler.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "firebase": "^12.13.0"
+  },
+  "devDependencies": {},
+  "keywords": []
+}
