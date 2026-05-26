@@ -139,18 +139,13 @@ function checkAndRingBell() {
   const currentDate = currentTime.toISOString().split("T")[0];
   const currentFormattedTime = `${currentHours}:${currentMinutes}`;
 
-  console.log(`[${new Date().toLocaleTimeString()}] Current Time: ${currentFormattedTime}`);
-  console.log(`[${new Date().toLocaleTimeString()}] Current Day: ${currentDay}`);
-  console.log(`[${new Date().toLocaleTimeString()}] Current Date: ${currentDate}`);
-  console.log(`[${new Date().toLocaleTimeString()}] Scheduled Times:`, schedule);
-
-  // Iterate through the schedule and check if any alarms need to go off
-  schedule = schedule.filter((item) => {
+  schedule.forEach((item, index) => {
     const isTimeToRing =
       item.time === currentFormattedTime &&
       (item.date === currentDate || item.days.includes(currentDay));
 
-    if (isTimeToRing) {
+    // Check if it's time to ring and if it hasn't rung yet
+    if (isTimeToRing && !item.rang) {
       console.log(`[${new Date().toLocaleTimeString()}] Ringing ${item.sound} at: ${currentFormattedTime}`);
       const sound = document.getElementById(item.sound === "bell.mp3" ? "bellSound" : "fireAlarmSound");
       sound.play().catch((error) => {
@@ -158,12 +153,14 @@ function checkAndRingBell() {
         alert("Unable to play the sound. Check your audio settings or file path.");
       });
 
-      // Remove the alarm if it's a one-time alarm
-      return !item.date; // Keep only recurring alarms (those without a specific date)
-    }
+      // Mark the item as "rang" to prevent it from ringing again
+      item.rang = true;
 
-    // Keep the alarm if it hasn't gone off yet
-    return true;
+      // Remove the alarm if it's a one-time alarm
+      if (item.date) {
+        schedule.splice(index, 1);
+      }
+    }
   });
 
   // Update localStorage and refresh the schedule table
