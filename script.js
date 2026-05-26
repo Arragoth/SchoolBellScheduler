@@ -153,7 +153,7 @@ function checkAndRingBell() {
         alert("Unable to play the sound. Check your audio settings or file path.");
       });
 
-      // Mark the item as "rang" to prevent it from ringing again
+      // Mark the item as "rang" to prevent it from ringing over and over
       item.rang = true;
 
       // Remove the alarm if it's a one-time alarm
