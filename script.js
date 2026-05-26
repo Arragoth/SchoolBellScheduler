@@ -68,7 +68,8 @@ function removeSchedule(index) {
   updateScheduleTable();
 }
 
-// Function to update the schedule table
+// Function to update the schedule table - Updated
+
 function updateScheduleTable() {
   const tableBody = document.getElementById("scheduleTable");
   tableBody.innerHTML = "";
