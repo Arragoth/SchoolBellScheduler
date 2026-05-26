@@ -182,3 +182,30 @@ function testBell() {
 
 // Initialize the schedule table on page load
 updateScheduleTable();
+
+function resetRangFlags() {
+  schedule.forEach((item) => {
+    if (!item.date) {
+      item.rang = false; // Reset the "rang" property for recurring alarms
+    }
+  });
+
+  // Update localStorage
+  localStorage.setItem("schedule", JSON.stringify(schedule));
+}
+
+// Schedule the reset function to run at midnight
+function scheduleDailyReset() {
+  const now = new Date();
+  const midnight = new Date();
+  midnight.setHours(24, 0, 0, 0); // Set time to midnight
+  const timeUntilMidnight = midnight - now;
+
+  setTimeout(() => {
+    resetRangFlags();
+    scheduleDailyReset(); // Schedule the next reset
+  }, timeUntilMidnight);
+}
+
+// Start the daily reset schedule on page load
+scheduleDailyReset();
