@@ -4,20 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bell Scheduler</title>
-  <link rel="stylesheet" href="styles.css">
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-analytics.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    #schedule {
+      margin-top: 20px;
+    }
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+      color: green;
+    }
+    .day-checkbox {
+      margin-right: 10px;
+    }
+  </style>
 </head>
 <body>
   <h1>Bell Scheduler</h1>
-  <p style="text-align: center; font-size: 1rem; color: #555;">
-    This scheduler is powered by Firebase. Your schedules will sync across devices automatically.
-  </p>
-
-  <div class="form-container">
+  <div>
     <label for="time">Select Time:</label>
     <input type="time" id="time" required>
     <label for="date">Select Date:</label>
@@ -37,19 +65,18 @@
       <option value="bell.mp3">Bell</option>
       <option value="fire_alarm.mp3">Fire Alarm</option>
     </select>
-    <button class="add-btn" onclick="addSchedule()">Add to Schedule</button>
+    <button onclick="addSchedule()">Add to Schedule</button>
   </div>
 
   <div id="scheduler">
     <h2>Control Scheduler</h2>
-    <button class="control-btn" onclick="startScheduler()">Start Scheduler</button>
-    <button class="control-btn" onclick="testBell()">Test Bell</button>
+    <button onclick="startScheduler()">Start Scheduler</button>
+    <button onclick="testBell()">Test Bell</button>
     <p id="status">Scheduler is not running.</p>
   </div>
 
   <div id="schedule">
     <h2>Scheduled Bells</h2>
-    <p id="loadingMessage">Loading schedule...</p>
     <table>
       <thead>
         <tr>
@@ -69,6 +96,6 @@
   <audio id="bellSound" src="bell.mp3" preload="auto"></audio>
   <audio id="fireAlarmSound" src="fire_alarm.mp3" preload="auto"></audio>
 
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

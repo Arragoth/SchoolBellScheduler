@@ -1,34 +1,6 @@
-// Import the Firebase modules
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue, remove } from "firebase/database";
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAk1--4R7IkWfQP1V9q5sRQE85ygWrjk10",
-  authDomain: "school-bell-scheduler-6cba9.firebaseapp.com",
-  projectId: "school-bell-scheduler-6cba9",
-  storageBucket: "school-bell-scheduler-6cba9.firebasestorage.app",
-  messagingSenderId: "959300724592",
-  appId: "1:959300724592:web:89af4168e8e0e2d2e551b5",
-  measurementId: "G-EE5BDL130L"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-
 // Array to store the scheduled times
-let schedule = [];
-
-// Function to load schedule from Firebase
-function loadScheduleFromFirebase() {
-  const scheduleRef = ref(database, "schedule");
-  onValue(scheduleRef, (snapshot) => {
-    const data = snapshot.val();
-    schedule = data || [];
-    updateScheduleTable();
-  });
-}
+let schedule = JSON.parse(localStorage.getItem("schedule")) || [];
+let schedulerStarted = false;
 
 // Function to add a new schedule
 function addSchedule() {
@@ -73,16 +45,11 @@ function addSchedule() {
   // Add the new schedule
   schedule.push(newSchedule);
 
-  // Save to Firebase
-  const scheduleRef = ref(database, "schedule");
-  set(scheduleRef, schedule)
-    .then(() => {
-      console.log("Schedule saved to Firebase!");
-      updateScheduleTable();
-    })
-    .catch((error) => {
-      console.error("Error saving schedule to Firebase:", error);
-    });
+  // Save schedule to localStorage
+  localStorage.setItem("schedule", JSON.stringify(schedule));
+
+  // Update the schedule table
+  updateScheduleTable();
 
   // Clear inputs
   document.getElementById("time").value = "";
@@ -95,16 +62,10 @@ function addSchedule() {
 function removeSchedule(index) {
   schedule.splice(index, 1);
 
-  // Update Firebase
-  const scheduleRef = ref(database, "schedule");
-  set(scheduleRef, schedule)
-    .then(() => {
-      console.log("Schedule updated in Firebase!");
-      updateScheduleTable();
-    })
-    .catch((error) => {
-      console.error("Error updating schedule in Firebase:", error);
-    });
+  // Update localStorage
+  localStorage.setItem("schedule", JSON.stringify(schedule));
+
+  updateScheduleTable();
 }
 
 // Function to update the schedule table
@@ -155,10 +116,12 @@ function startScheduler() {
     console.log("Audio context initialized. Scheduler started!");
     schedulerStarted = true;
 
+    // Update the status message
     const statusMessage = document.getElementById("status");
     statusMessage.textContent = "Scheduler is running...";
-    statusMessage.classList.add("running");
+    statusMessage.style.color = "green";
 
+    // Start checking for scheduled times
     setInterval(checkAndRingBell, 1000); // Check every second for better accuracy
     alert("Scheduler started!");
   }).catch((error) => {
@@ -176,20 +139,38 @@ function checkAndRingBell() {
   const currentDate = currentTime.toISOString().split("T")[0];
   const currentFormattedTime = `${currentHours}:${currentMinutes}`;
 
-  schedule.forEach((item) => {
-    if (
+  console.log(`[${new Date().toLocaleTimeString()}] Current Time: ${currentFormattedTime}`);
+  console.log(`[${new Date().toLocaleTimeString()}] Current Day: ${currentDay}`);
+  console.log(`[${new Date().toLocaleTimeString()}] Current Date: ${currentDate}`);
+  console.log(`[${new Date().toLocaleTimeString()}] Scheduled Times:`, schedule);
+
+  // Iterate through the schedule and check if any alarms need to go off
+  schedule = schedule.filter((item) => {
+    const isTimeToRing =
       item.time === currentFormattedTime &&
-      (item.date === currentDate || item.days.includes(currentDay))
-    ) {
-      console.log(`Ringing ${item.sound} at: ${currentFormattedTime}`);
+      (item.date === currentDate || item.days.includes(currentDay));
+
+    if (isTimeToRing) {
+      console.log(`[${new Date().toLocaleTimeString()}] Ringing ${item.sound} at: ${currentFormattedTime}`);
       const sound = document.getElementById(item.sound === "bell.mp3" ? "bellSound" : "fireAlarmSound");
       sound.play().catch((error) => {
-        console.error("Error playing sound:", error);
+        console.error(`[${new Date().toLocaleTimeString()}] Error playing sound:`, error);
         alert("Unable to play the sound. Check your audio settings or file path.");
       });
+
+      // Remove the alarm if it's a one-time alarm
+      return !item.date; // Keep only recurring alarms (those without a specific date)
     }
+
+    // Keep the alarm if it hasn't gone off yet
+    return true;
   });
+
+  // Update localStorage and refresh the schedule table
+  localStorage.setItem("schedule", JSON.stringify(schedule));
+  updateScheduleTable();
 }
+
 
 // Function to test the bell sound
 function testBell() {
@@ -202,5 +183,5 @@ function testBell() {
   });
 }
 
-// Load the schedule from Firebase on page load
-loadScheduleFromFirebase();
+// Initialize the schedule table on page load
+updateScheduleTable();
